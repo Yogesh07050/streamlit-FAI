@@ -1,6 +1,9 @@
 # Secrets
 .env
 
+# Paper (not redistributed in the repo)
+*.pdf
+
 # Python
 __pycache__/
 *.py[cod]

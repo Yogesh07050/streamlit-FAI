@@ -207,6 +207,9 @@ class DimensionBreakdown:
     n_subjective: int = 0
     n_opportunities: int = 0
     notes: list[str] = field(default_factory=list)
+    # Paper-faithful subjective rubric detail (Appendix B):
+    raw_score: float = float("nan")               # weighted sum before T(x)
+    contributions: list = field(default_factory=list)  # (question, weight, 0/1)
 
 
 @dataclass

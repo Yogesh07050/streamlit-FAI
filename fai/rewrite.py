@@ -30,6 +30,20 @@ def _weakest(result: FaiResult, n: int = 3) -> list[str]:
     return sorted(KEYS, key=lambda k: result.dimension_scores[k])[:n]
 
 
+def _unmet_targets(result: FaiResult, weak_keys: list[str], limit: int = 10) -> list[tuple[str, float]]:
+    """Unmet positive rubric indicators across the weakest dimensions.
+
+    These are the concrete, paper-defined criteria (Appendix B) the response does
+    not yet satisfy; satisfying them is exactly what raises the score.
+    """
+    best: dict[str, float] = {}
+    for k in weak_keys:
+        for question, weight, answer in result.dimensions[k].contributions:
+            if weight > 0 and answer == 0:
+                best[question] = max(best.get(question, 0.0), weight)
+    return sorted(best.items(), key=lambda qw: -qw[1])[:limit]
+
+
 def _rewrite_once(text: str, result: FaiResult, client, model: str) -> tuple[str, str, dict]:
     weak = _weakest(result)
     focus = "\n".join(
@@ -37,15 +51,21 @@ def _rewrite_once(text: str, result: FaiResult, client, model: str) -> tuple[str
         f"{BY_KEY[k].rubric}"
         for k in weak
     )
+    unmet = _unmet_targets(result, weak)
+    unmet_block = "\n".join(f"  [+{w:g}] {q}" for q, w in unmet)
     scores = ", ".join(f"{BY_KEY[k].name} {result.dimension_scores[k]:.0f}" for k in KEYS)
     user = (
         f"Current dimension scores: {scores}.\n"
         f"FAI score (geometric mean): {result.score:.1f}.\n\n"
-        "Rewrite the paragraph to raise the FAI score, focusing on the weakest "
-        "dimensions below -- but only in ways that authentically fit the "
-        "situation. If a weak dimension truly has no place here, leave it and "
-        "strengthen the ones that do.\n\n"
-        f"WEAKEST DIMENSIONS TO ADDRESS:\n{focus}\n\n"
+        "The FAI score comes from a fixed rubric of weighted yes/no criteria. "
+        "Below are rubric criteria the response does NOT yet satisfy, with their "
+        "point weights. Rewrite the paragraph so it genuinely satisfies as many of "
+        "these as authentically fit the situation (higher weights matter more). "
+        "Do NOT fabricate facts, pad with filler, or bolt on content the situation "
+        "doesn't call for -- an inauthentic addition is worse than a missing point. "
+        "Preserve the original intent, topic, audience and voice.\n\n"
+        f"UNMET RUBRIC CRITERIA (weight in brackets):\n{unmet_block}\n\n"
+        f"WEAKEST DIMENSIONS TO PRIORITISE:\n{focus}\n\n"
         f'Return JSON: {{"rewrite": "<improved paragraph>", "changes": '
         f'"<one sentence on what you changed>"}}\n\n'
         f'ORIGINAL PARAGRAPH:\n"""\n{text.strip()}\n"""'
