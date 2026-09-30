@@ -28,8 +28,26 @@ CHAT_MODELS = [
 ]
 
 DEFAULT_TEXT = (
-    "You're overthinking the promotion thing. Just keep your head down, work "
-    "harder than everyone else, and it'll sort itself out eventually."
+    "I'm really sorry - losing a job you counted on is a genuine loss, and the "
+    "shock and grief you're feeling are valid, not weakness. Be gentle with "
+    "yourself first: protect your sleep, eat, and move a little each day, because "
+    "steady health is what everything else rebuilds on, and reach out to a "
+    "counselor or your doctor if the low mood deepens. You don't have to carry "
+    "this alone - tell one or two people who love you and let them in; honest, "
+    "supported relationships are where resilience actually comes from. On the "
+    "practical side, map your runway this week: check any severance, file for "
+    "unemployment benefits, list essential expenses, and keep an emergency buffer "
+    "before anything else (most planners suggest 3-6 months of costs) so money "
+    "worry doesn't drive fear-based decisions. Then, when you're ready, treat "
+    "this as a chance to ask what work would actually be meaningful - not just "
+    "the fastest paycheck - and take one small, courageous step toward it, "
+    "because acting with patience and integrity now is the kind of character that "
+    "outlasts any single job. If faith or a community of meaning matters to you, "
+    "lean on it; many people find real steadiness there. I could be wrong about "
+    "your situation, so tell me what's true for you and we'll build the next "
+    "steps together. This setback is one hard chapter, not the whole story - and "
+    "people who face these moments with honesty and support usually come out "
+    "steadier than before."
 )
 
 LEAF = (
